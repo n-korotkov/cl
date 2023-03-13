@@ -1,0 +1,21 @@
+Глобальная дистрибьюторская система (англ. Global Distribution System, GDS) — международная компьютерная система бронирований.
+Компьютерные системы бронирования (англ. computer reservations system, CRS) первоначально были разработаны и использовались только авиаперевозчиками. Первые подобные системы появились в середине 1960-х годов. Затем эти системы были расширены для использования туристическими агентствами. Позже системы стали также включать возможность бронирования номеров в гостиницах, морских круизов, прокат автомобилей, автобусных билетов и т. д. Туристические агентства, подключённые к терминалам глобальных дистрибьюторских систем, получили возможность предоставлять своим клиентам услуги по бронированию в режиме реального времени.
+К крупнейшим GDS относят:
+
+Amadeus 
+KIU
+Galileo 
+Sabre 
+Worldspan
+AbacusОсновные GDS стали членами Международного общества аэротелекоммуникаций SITA.
+В России была создана GDS «Сирена» отечественной разработки.
+
+Примечания
+Ссылки
+http://www.businessdictionary.com/definition/Global-Distribution-System-GDS.html Архивная копия от 16 декабря 2017 на Wayback Machine
+http://www.tts.com/blog/why-is-gds-important-to-the-travel-industry/
+http://govinfo.library.unt.edu/ncecic/studies/travel_agents.pdf
+https://www.gao.gov/products/GAO-03-749
+https://pdfs.semanticscholar.org/ecc3/bda8f7a0152c8c131e25f62231736175ec8c.pdf Архивная копия от 15 октября 2018 на Wayback Machine
+https://books.google.ru/books?id=IbTT1yIfsYIC&pg=PA169&lpg=PA169&dq=Amadeus
+https://web.archive.org/web/20080527000044/http://www.dot.gov/affairs/Computer%20Reservations%20System.htm
