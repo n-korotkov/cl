@@ -90,7 +90,7 @@ static void write_concordances(std::vector<Concordance> &concordances,
                 out << dict.get_lexeme(id).lemma << " ";
             }
             out << std::string(right_len_max - *right_len_it, ' ');
-            out << ": " << conc_freq[conc] << "\n";
+            out << format_num_len(conc_freq[conc], 8) << "\n";
             left_len_it++;
             right_len_it++;
         }

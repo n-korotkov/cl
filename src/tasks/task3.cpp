@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -11,6 +12,7 @@
 
 #include "../bufstream.h"
 #include "../dictionary.h"
+#include "../string_utils.h"
 #include "../trie.h"
 
 struct NGram {
@@ -202,6 +204,27 @@ static void find_stable_ngrams(size_t frequency_threshold, float stability_thres
     }
 }
 
+void write_ngrams(std::vector<NGram> &ngrams, std::ostream &out) {
+    std::vector<int> len;
+    for (NGram &ngram : ngrams) {
+        len.push_back(0);
+        for (LexemeId id : ngram.lexemes) {
+            len.back() += utf8_str_len(dict.get_lexeme(id).lemma) + 1;
+        }
+    }
+    int len_max {std::max(*std::max_element(len.begin(), len.end()), 6)};
+
+    out << "N-gram" << std::string(len_max - 6, ' ') << "Occurences             IDF\n\n";
+    for (int i {0}; i < len.size(); ++i) {
+        for (LexemeId id : ngrams[i].lexemes) {
+            out << dict.get_lexeme(id).lemma << " ";
+        }
+        out << std::string(len_max - len[i], ' ')
+            << format_num_len(ngrams[i].total_occurences(), 10)
+            << format_num_len(std::log(static_cast<float>(tokenized_files.size()) / ngrams[i].occurences.size()), 16) << "\n";
+    }
+}
+
 void task(int argc, char **argv) {
     std::string phrase(argv[4]);
     std::istringstream in(phrase);
@@ -212,10 +235,18 @@ void task(int argc, char **argv) {
                    [] (WordFormId &word_form) { return dict.disambiguate_lexeme(word_form); });
     std::string phrase_key {lexemes_key(phrase_lexemes)};
 
-    if (!std::filesystem::exists("n-grams.bin")) {
+    if (argc > 5) {
         size_t frequency_threshold {std::stoull(argv[5])};
         float stability_threshold {std::stof(argv[6])};
         find_stable_ngrams(std::max(frequency_threshold, static_cast<size_t>(2)), stability_threshold);
+
+        std::cout << "Saving n-grams to n-grams.bin...\n";
+        std::ofstream dout("n-grams.bin", std::ios_base::binary);
+        stable_ngrams.write_to(dout, write_ngram);
+        dout.close();
+    } else if (!std::filesystem::exists("n-grams.bin")) {
+        std::cerr << "n-grams.bin not found, exiting...\n";
+        return;
     } else {
         std::cout << "n-grams.bin found, restoring n-grams...\n";
         std::ifstream din("n-grams.bin", std::ios_base::binary);
@@ -224,54 +255,34 @@ void task(int argc, char **argv) {
         din.close();
     }
 
+    std::cout << "Stable n-grams: " << stable_ngrams.size() << "\n";
 
     std::ofstream fout("n-grams.txt");
 
 #define CONTAINS(xs, x) (std::find((xs).begin(), (xs).end(), (x)) != (xs).end())
 #define SORT(xs, cmp) (std::sort((xs).begin(), (xs).end(), (cmp)))
 
+    std::vector<NGram> found_ngrams;
     if (phrase_lexemes.size() < 2) {
-        std::vector<NGram> found_ngrams;
         for (size_t i {0}; i < stable_ngrams.size(); ++i) {
             if (phrase_lexemes.empty() || CONTAINS(stable_ngrams[i].lexemes, phrase_lexemes[0])) {
                 found_ngrams.push_back(stable_ngrams[i]);
             }
         }
-        SORT(found_ngrams, [] (NGram &x, NGram &y) { return x.total_occurences() > y.total_occurences(); });
-
-        for (NGram &ngram : found_ngrams) {
-            for (LexemeId id : ngram.lexemes) {
-                fout << dict.get_lexeme(id).lemma << " ";
-            }
-            fout << ngram.total_occurences() << "\n";
-        }
     } else {
         if (stable_ngrams.contains(phrase_key)) {
             size_t i {stable_ngrams.find_by_key(phrase_key)[0]};
-            for (LexemeId id : stable_ngrams[i].lexemes) {
-                fout << dict.get_lexeme(id).lemma << " ";
-            }
-            fout << stable_ngrams[i].total_occurences() << "\n";
-            fout << "\nNested n-grams:\n";
+            found_ngrams.push_back(stable_ngrams[i]);
             for (size_t j : stable_ngrams[i].nested) {
-                fout << " ";
-                for (LexemeId id : stable_ngrams[j].lexemes) {
-                    fout << dict.get_lexeme(id).lemma << " ";
-                }
-                fout << stable_ngrams[j].total_occurences() << "\n";
+                found_ngrams.push_back(stable_ngrams[j]);
             }
+            fout << phrase << "\n";
         } else {
             std::cout << "N-gram not found\n";
         }
     }
-
-
-    if (!std::filesystem::exists("n-grams.bin")) {
-        std::cout << "Saving n-grams to n-grams.bin...\n";
-        std::ofstream dout("n-grams.bin", std::ios_base::binary);
-        stable_ngrams.write_to(dout, write_ngram);
-        dout.close();
-    }
+    SORT(found_ngrams, [] (NGram &x, NGram &y) { return x.total_occurences() > y.total_occurences(); });
+    write_ngrams(found_ngrams, fout);
 
     fout.close();
 }
