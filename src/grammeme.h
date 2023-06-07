@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bitset>
 #include <string_view>
 #include <unordered_map>
 
@@ -128,6 +129,8 @@ enum class Grammeme {
 
     Max,
 };
+
+using Grammemes = std::bitset<static_cast<size_t>(Grammeme::Max)>;
 
 inline Grammeme to_grammeme(std::string_view sv) {
     static const std::unordered_map<std::string_view, Grammeme> t({

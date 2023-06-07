@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bitset>
 #include <limits>
 #include <ostream>
 #include <string_view>
@@ -17,14 +16,14 @@ using LexemeId = size_t;
 
 struct WordForm {
     std::string form;
-    std::bitset<static_cast<size_t>(Grammeme::Max)> grammemes;
+    Grammemes grammemes;
     PoS part_of_speech {PoS::Unknown};
     LexemeId lexeme_id {0};
 };
 
 struct Lexeme {
     std::string lemma;
-    std::bitset<static_cast<size_t>(Grammeme::Max)> grammemes;
+    Grammemes grammemes;
     PoS part_of_speech {PoS::Unknown};
     LexemeId id {0};
     std::unordered_set<LexemeId> parent_ids;

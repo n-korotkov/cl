@@ -47,6 +47,7 @@ void read_word_forms(std::filesystem::path morph_dict_path) {
         lexeme.lemma = xmler.attr("t");
         xmler.step_in(); // g
         lexeme.part_of_speech = to_pos(xmler.attr("v"));
+        lexeme.grammemes[static_cast<int>(to_grammeme(xmler.attr("v")))] = 1;
         while (xmler.next()) {
             lexeme.grammemes[static_cast<int>(to_grammeme(xmler.attr("v")))] = 1;
         }
