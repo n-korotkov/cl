@@ -28,6 +28,10 @@ struct NGram {
         }
         return total_occurences;
     }
+
+    float idf(size_t file_count) {
+        return std::log(static_cast<float>(file_count) / occurences.size());
+    }
 };
 
 template <typename T>
@@ -102,6 +106,8 @@ static void write_ngram(std::ostream &stream, NGram &ngram) {
 }
 
 extern Dictionary dict;
+extern int total_words;
+extern int total_files;
 extern std::unordered_map<std::string, std::vector<WordFormId>> tokenized_files;
 extern std::vector<WordFormId> tokenize(std::istream &fin);
 
@@ -204,7 +210,16 @@ static void find_stable_ngrams(size_t frequency_threshold, float stability_thres
     }
 }
 
-void write_ngrams(std::vector<NGram> &ngrams, std::ostream &out) {
+//
+// ngram occurences/words total * log(docs total)/ngram docs
+//
+static float tf_idf(NGram &ngram) {
+    float tf {static_cast<float>(ngram.total_occurences()) / total_words};
+    float idf {std::log(static_cast<float>(total_files) / ngram.occurences.size())};
+    return tf * idf;
+}
+
+static void write_ngrams(std::vector<NGram> &ngrams, std::ostream &out) {
     std::vector<int> len;
     for (NGram &ngram : ngrams) {
         len.push_back(0);
@@ -212,16 +227,20 @@ void write_ngrams(std::vector<NGram> &ngrams, std::ostream &out) {
             len.back() += utf8_str_len(dict.get_lexeme(id).lemma) + 1;
         }
     }
-    int len_max {std::max(*std::max_element(len.begin(), len.end()), 6)};
+    int len_max {6};
+    auto len_it {std::max_element(len.begin(), len.end())};
+    if (len_it != len.end()) {
+        len_max = std::max(len_max, *len_it);
+    }
 
-    out << "N-gram" << std::string(len_max - 6, ' ') << "Occurences             IDF\n\n";
+    out << "N-gram" << std::string(len_max - 6, ' ') << "Occurences          TF-IDF\n\n";
     for (int i {0}; i < len.size(); ++i) {
         for (LexemeId id : ngrams[i].lexemes) {
             out << dict.get_lexeme(id).lemma << " ";
         }
         out << std::string(len_max - len[i], ' ')
             << format_num_len(ngrams[i].total_occurences(), 10)
-            << format_num_len(std::log(static_cast<float>(tokenized_files.size()) / ngrams[i].occurences.size()), 16) << "\n";
+            << format_num_len(tf_idf(ngrams[i]), 16) << "\n";
     }
 }
 
@@ -263,7 +282,11 @@ void task(int argc, char **argv) {
 #define SORT(xs, cmp) (std::sort((xs).begin(), (xs).end(), (cmp)))
 
     std::vector<NGram> found_ngrams;
-    if (phrase_lexemes.size() < 2) {
+    if (phrase_lexemes.empty()) {
+        for (size_t i {0}; i < stable_ngrams.size(); ++i) {
+            found_ngrams.push_back(stable_ngrams[i]);
+        }
+    } else if (phrase_lexemes.size() == 1) {
         for (size_t i {0}; i < stable_ngrams.size(); ++i) {
             if (phrase_lexemes.empty() || CONTAINS(stable_ngrams[i].lexemes, phrase_lexemes[0])) {
                 found_ngrams.push_back(stable_ngrams[i]);
@@ -279,9 +302,11 @@ void task(int argc, char **argv) {
             fout << phrase << "\n";
         } else {
             std::cout << "N-gram not found\n";
+            fout.close();
+            return;
         }
     }
-    SORT(found_ngrams, [] (NGram &x, NGram &y) { return x.total_occurences() > y.total_occurences(); });
+    SORT(found_ngrams, [] (NGram &x, NGram &y) { return tf_idf(x) > tf_idf(y); });
     write_ngrams(found_ngrams, fout);
 
     fout.close();

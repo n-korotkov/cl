@@ -70,6 +70,9 @@ static void write_concordances(std::vector<Concordance> &concordances,
             }
         }
     }
+    if (left_len.empty()) {
+        return;
+    }
     int left_len_max {*std::max_element(left_len.begin(), left_len.end())};
     int right_len_max {*std::max_element(right_len.begin(), right_len.end())};
 
