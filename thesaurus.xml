@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<thesaurus>
+    <synset l="самолёт">
+        <synonym l="авиалайнер" />
+        <synonym l="биплан" />
+        <synonym l="бомбардировщик" />
+        <synonym l="истребитель" />
+        <synonym l="лайнер" />
+        <synonym l="моноплан" />
+        <synonym l="судно" />
+        <synonym l="триплан" />
+        <synonym l="штурмовик" />
+    </synset>
+    <synset l="полёт">
+        <synonym l="взлёт" />
+        <synonym l="вылет" />
+        <synonym l="налёт" />
+        <synonym l="облет" />
+        <synonym l="перелёт" />
+        <synonym l="рейс" />
+    </synset>
+    <synset l="авиационный">
+        <synonym l="аэродинамический" />
+        <synonym l="воздушный" />
+        <synonym l="летательный" />
+    </synset>
+    <synset l="оборудование">
+        <synonym l="агрегат" />
+        <synonym l="аппарат" />
+        <synonym l="машина" />
+        <synonym l="прибор" />
+        <synonym l="техника" />
+        <synonym l="узел" />
+        <synonym l="устройство" />
+    </synset>
+    <synset l="манёвр">
+        <synonym l="бочка" />
+        <synonym l="крен" />
+        <synonym l="петля" />
+        <synonym l="пилотаж" />
+        <synonym l="разворот" />
+        <synonym l="рыскание" />
+        <synonym l="тангаж" />
+    </synset>
+    <synset l="вооружение">
+        <synonym l="бомба" />
+        <synonym l="пулемёт" />
+        <synonym l="пушка" />
+        <synonym l="ракета" />
+        <synonym l="снаряд" />
+    </synset>
+    <synset l="конструкция">
+        <synonym l="кабина" />
+        <synonym l="планер" />
+        <synonym l="сечение" />
+        <synonym l="форма" />
+        <synonym l="фюзеляж" />
+        <synonym l="шасси" />
+    </synset>
+    <synset l="крыло">
+        <synonym l="винт" />
+        <synonym l="закрылок" />
+        <synonym l="лопасть" />
+        <synonym l="оперение" />
+        <synonym l="элерон" />
+    </synset>
+    <synset l="аэродром">
+        <synonym l="аэропорт" />
+        <synonym l="аэроузел" />
+        <synonym l="впп" />
+        <synonym l="полоса" />
+        <synonym l="стоянка" />
+    </synset>
+    <synset l="траектория">
+        <synonym l="глиссада" />
+        <synonym l="курс" />
+        <synonym l="направление" />
+    </synset>
+</thesaurus>

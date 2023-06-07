@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../bufstream.h"
 #include "../dictionary.h"
+#include "../string_utils.h"
 #include "../trie.h"
 #include "../xmler.h"
 
@@ -77,6 +77,7 @@ void task(int argc, char **argv) {
 
     std::ofstream fout("models.txt");
 
+    fout << "Model                                Freq     TF-IDF\n\n";
     for (Model &model : models) {
         std::unordered_map<std::string, std::vector<size_t>> model_occurences;
         int model_occurences_total {0};
@@ -105,7 +106,7 @@ void task(int argc, char **argv) {
         }
         float tf {static_cast<float>(model_occurences_total) / total_words};
         float idf {std::log(static_cast<float>(total_files) / model_occurences.size())};
-        fout << model.name << ": " << model_occurences_total << " (idf = " << (tf * idf) << ")\n";
+        fout << format_str_len(model.name, 32) << " " << format_num_len(model_occurences_total, 8) << "   " << format_num_len(tf * idf, 8) << "\n";
         for (auto &model_entry : model_occurences) {
             for (size_t i : model_entry.second) {
                 fout << "  ";

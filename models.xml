@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<models>
+    <model name="Совершить полёт">
+        <token lemma="совершить" />
+        <token lemma="полёт" />
+    </model>
+    <model name="Авиационное оборудование">
+        <token lemma="авиационный" />
+        <token lemma="оборудование" />
+    </model>
+    <model name="При_ совершении_ манёвра">
+        <token wordform="при" />
+        <token wordform="совершении" />
+        <token lemma="манёвр" />
+    </model>
+    <model name="Летательный NOUN">
+        <token lemma="летательный" />
+        <token>
+            <g v="NOUN" />
+        </token>
+    </model>
+    <model name="Взлёт PREP singular_NOUN">
+        <token lemma="взлёт" />
+        <token>
+            <g v="PREP" />
+        </token>
+        <token>
+            <g v="NOUN" />
+            <g v="sing" />
+        </token>
+    </model>
+    <model name="NOUN в_ воздухе_">
+        <token>
+            <g v="NOUN" />
+        </token>
+        <token wordform="в" />
+        <token wordform="воздухе" />
+    </model>
+    <model name="Оборудование для_ *">
+        <token lemma="оборудование" />
+        <token wordform="для" />
+        <token />
+    </model>
+    <model name="Конструкция крыла">
+        <token lemma="конструкция" />
+        <token lemma="крыло" />
+    </model>
+    <model name="Аэродром в_ Geox_NOUN">
+        <token lemma="аэродром" />
+        <token wordform="в" />
+        <token>
+            <g v="NOUN" />
+            <g v="Geox" />
+        </token>
+    </model>
+    <model name="Вооружение на_ самолёте">
+        <token lemma="вооружение" />
+        <token wordform="на" />
+        <token lemma="самолёт" />
+    </model>
+</models>

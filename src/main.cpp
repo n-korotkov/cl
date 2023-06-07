@@ -163,10 +163,13 @@ int main(int argc, char **argv) {
     std::cout << "Files:  " << total_files << "\n";
     std::cout << "Tokens: " << total_words << "\n\n";
 
+    std::cout << "Running " << argv[0] << "...\n";
+    TIMER_START(task);
     task(argc, argv);
+    std::cout << "Done in " << TIMER_READ(task) << "s\n";
 
     if (!std::filesystem::exists("dict.bin")) {
-        std::cout << "Saving dictionary to dict.bin...\n";
+        std::cout << "\nSaving dictionary to dict.bin...\n";
         std::ofstream dout("dict.bin", std::ios_base::binary);
         dict.write_to(dout);
         dout.close();
